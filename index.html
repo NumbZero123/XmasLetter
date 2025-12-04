@@ -20,6 +20,7 @@
       position: relative;
       text-align: center;
       cursor: pointer;
+      z-index: 1;
     }
 
     .snowglobe {
@@ -27,13 +28,23 @@
       height: 280px;
       background: url('snowglobe.png') center/cover no-repeat;
       animation: float 3s ease-in-out infinite;
-      transition: transform 1s ease;
+      transition: transform 1s ease, opacity 1s ease;
+      position: relative;
+      z-index: 0;
     }
 
     @keyframes float {
       0% { transform: translateY(0); }
       50% { transform: translateY(-10px); }
       100% { transform: translateY(0); }
+    }
+
+    @keyframes shake {
+      0% { transform: translate(0, 0); }
+      25% { transform: translate(5px, 0); }
+      50% { transform: translate(-5px, 0); }
+      75% { transform: translate(5px, 0); }
+      100% { transform: translate(0, 0); }
     }
 
     .hidden {
@@ -56,6 +67,7 @@
       white-space: pre-wrap;
       font-size: 1.05rem;
       line-height: 1.5rem;
+      z-index: 2;
     }
 
     .snow {
@@ -66,6 +78,7 @@
       height: 100%;
       pointer-events: none;
       overflow: hidden;
+      z-index: 0;
     }
 
     .snow span {
@@ -88,6 +101,8 @@
       border: none;
       outline: none;
       font-size: 1rem;
+      position: relative;
+      z-index: 3;
     }
   </style>
 </head>
@@ -96,7 +111,7 @@
 <div class="snow" id="snow"></div>
 
 <div class="center" id="center">
-  <div class="snowglobe" id="snowglobe"></div>
+  <div class="snowglobe hidden" id="snowglobe"></div>
   <input id="codeInput" placeholder="Enter the code..." />
 </div>
 
@@ -142,25 +157,20 @@ Merry Christmas and Happy New Year.
   const paper = document.getElementById('paper');
 
   codeInput.addEventListener('input', () => {
-    if (codeInput.value.toLowerCase() === 'hamster'.toLowerCase()) {
-      // Show snowglobe if hidden
+    if (codeInput.value.toLowerCase() === 'hamster') {
+      // Show snowglobe
       snowglobe.classList.remove('hidden');
-
-      // Camera zoom effect
       snowglobe.style.transform = 'scale(1.2)';
 
       setTimeout(() => {
-        // Shake animation
         snowglobe.style.animation = 'shake 0.5s ease';
       }, 500);
 
       setTimeout(() => {
-        // Zoom in further to "inside"
         snowglobe.style.transform = 'scale(2)';
       }, 1000);
 
       setTimeout(() => {
-        // Begin transition to paper
         snowglobe.style.opacity = '0';
         paper.style.opacity = '1';
         paper.style.transform = 'scale(1) rotate(0)';
