@@ -1,181 +1,251 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Christmas Letter</title>
-  <style>
-    body {
-      margin: 0;
-      background: linear-gradient(#b21818, #801212);
-      font-family: 'Georgia', serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      overflow: hidden;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Holiday Letter</title>
+<style>
+  /* Basic reset */
+  * { margin:0; padding:0; box-sizing:border-box; font-family: 'Georgia', serif; }
+  body {
+    background: linear-gradient(to bottom, #ffe5d4, #fff9f0);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    perspective: 1000px;
+  }
 
-    .center {
-      position: relative;
-      text-align: center;
-      z-index: 2;
-    }
+  /* Snow globe container */
+  .globe-container {
+    position: relative;
+    width: 250px;
+    height: 350px;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease;
+  }
 
-    .snowglobe {
-      width: 280px;
-      height: 280px;
-      background: url('snowglobe.png') center/cover no-repeat;
-      animation: float 3s ease-in-out infinite;
-      transition: transform 1s ease, opacity 1s ease;
-      position: relative;
-      z-index: 1;
-      pointer-events: none;
-    }
+  .globe-container.shake {
+    animation: shake 0.6s ease-in-out 1;
+  }
 
-    @keyframes float {
-      0% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-      100% { transform: translateY(0); }
-    }
+  @keyframes shake {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(4deg); }
+    50% { transform: rotate(-4deg); }
+    75% { transform: rotate(3deg); }
+    100% { transform: rotate(0deg); }
+  }
 
-    @keyframes shake {
-      0% { transform: translate(0, 0); }
-      25% { transform: translate(5px, 0); }
-      50% { transform: translate(-5px, 0); }
-      75% { transform: translate(5px, 0); }
-      100% { transform: translate(0, 0); }
-    }
+  /* Globe sphere */
+  .globe {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 80%;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.6), rgba(200,240,255,0.2));
+    border-radius: 50%;
+    border: 3px solid #b38b4d;
+    overflow: hidden;
+    box-shadow: inset 0 0 20px rgba(255,255,255,0.5), 0 8px 15px rgba(0,0,0,0.2);
+  }
 
-    .hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
+  /* Snow inside globe */
+  .snowflake {
+    position: absolute;
+    top: -10px;
+    width: 5px;
+    height: 5px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.9;
+    animation: fall linear infinite;
+  }
 
-    .paper {
-      width: 90%;
-      max-width: 600px;
-      padding: 30px;
-      background: #fffdf6;
-      border: 2px solid gold;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
-      position: absolute;
-      opacity: 0;
-      transform: scale(0.5) rotate(-2deg);
-      transition: opacity 1.2s ease, transform 1.2s ease;
-      white-space: pre-wrap;
-      font-size: 1.05rem;
-      line-height: 1.5rem;
-      z-index: 2;
-    }
+  @keyframes fall {
+    0% { transform: translateY(0px) rotate(0deg); }
+    100% { transform: translateY(250px) rotate(360deg); }
+  }
 
-    .snow {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      overflow: hidden;
-      z-index: 0;
-    }
+  /* Globe base */
+  .base {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 20%;
+    background: #b38b4d;
+    border-radius: 0 0 20px 20px;
+  }
 
-    .snow span {
-      position: absolute;
-      top: -10px;
-      background: white;
-      border-radius: 50%;
-      opacity: 0.8;
-      animation: fall linear infinite;
-    }
+  /* Holiday scene inside globe */
+  .scene {
+    position: absolute;
+    bottom: 10%;
+    width: 100%;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    transform-origin: center center;
+    transition: transform 2s ease;
+  }
 
-    @keyframes fall {
-      to { transform: translateY(110vh); }
-    }
+  .house {
+    width: 40px;
+    height: 30px;
+    background: #e63946;
+    border: 2px solid #fff;
+    position: relative;
+    border-radius: 2px;
+  }
 
-    #codeInput {
-      margin-top: 20px;
-      padding: 10px;
-      border-radius: 6px;
-      border: none;
-      outline: none;
-      font-size: 1rem;
-      position: relative;
-      z-index: 3;
-      pointer-events: auto;
-    }
-  </style>
+  .roof {
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-bottom: 15px solid #2a9d8f;
+    position: absolute;
+    top: -15px;
+    left: 0;
+  }
+
+  .tree {
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 25px solid #2a9d8f;
+    margin-left: 10px;
+  }
+
+  /* Crumpled paper */
+  .paper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    max-width: 400px;
+    transform: translate(-50%, -50%) scale(0.8);
+    background: #fff9e6;
+    border: 2px solid #b38b4d;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    padding: 20px;
+    border-radius: 5px;
+    opacity: 0;
+    transform-origin: center center;
+    transition: opacity 1s ease, transform 1s ease;
+  }
+
+  .paper.reveal {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+
+  .letter {
+    color: #4b2e2e;
+    font-size: 1rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+  }
+
+  /* Confetti */
+  .confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #f4d35e;
+    top: -10px;
+    opacity: 0.8;
+    border-radius: 50%;
+    animation: confettiFall linear infinite;
+  }
+
+  @keyframes confettiFall {
+    0% { transform: translateY(0px) rotate(0deg); opacity: 0.8; }
+    100% { transform: translateY(500px) rotate(360deg); opacity: 0; }
+  }
+</style>
 </head>
 <body>
 
-<div class="snow" id="snow"></div>
-
-<div class="center" id="center">
-  <div class="snowglobe hidden" id="snowglobe"></div>
-  <input id="codeInput" placeholder="Enter the code..." />
+<div class="globe-container" id="globeContainer">
+  <div class="globe" id="globe">
+    <div class="scene" id="scene">
+      <div class="house">
+        <div class="roof"></div>
+      </div>
+      <div class="tree"></div>
+    </div>
+    <!-- Snowflakes will be added by JS -->
+  </div>
+  <div class="base"></div>
 </div>
 
 <div class="paper" id="paper">
+  <div class="letter">
 Hey [her name],
 
 I hope the holidays have been treating you well. I wanted to give you something a little more personal than a gift, so I decided to write this for you.
 
-We have known each other since February, and you have become such a steady part of my life that it feels like you have been around much longer. We have both gone through a lot this year, with my relationships, your crush, and everything in between. Through all of that, you have stayed someone I feel grateful to have beside me.
+We’ve known each other since February, and you’ve become such a steady part of my life that it feels like you’ve been around much longer. We have both gone through a lot this year, with my relationships, your crush, and everything in between. Through all of that, you’ve stayed someone I feel genuinely grateful to have beside me.
 
-One of my favorite memories is still that movie night when we watched The Nun. I am not sure if it was the movie or the fact that I was next to you, but my heart was racing the entire time. It was simple, but it felt right, and the feeling stayed with me.
+One of my favorite memories is still that movie night when we watched *The Nun*. I’m not sure if it was the movie or the fact that I was next to you, but I remember my heart racing the entire time. It was simple, but it felt right, and it stuck with me.
 
-There is something about the way you laugh and the way you talk about the things that matter to you. You make everything feel lighter without trying. Even on my rough days, hearing from you makes everything calmer. I met a lot of people this year, but you are the one who keeps coming to mind. No one makes me feel as understood as you do.
+There is something about the way you laugh and the way you talk about the things that matter to you. You make things feel lighter without even trying. Even on my rough days, hearing from you makes everything calmer. I met a lot of people this year, but you’re the one who keeps coming to mind. No one makes me feel as understood as you do.
 
-I wish you could see yourself the way I see you. You are beautiful, with or without makeup. You are sweet, kind, adorable, and one of the most caring people I know.
+I know you don’t always believe it when people compliment you, but I wish you could see yourself the way I see you. You are beautiful, with or without makeup. You are sweet, kind, adorable, and one of the most caring people I know.
 
-Lately, as we talked more, I realized that some feelings I thought were gone were actually still there. They had just been quiet. They have been growing a little more every day. I am still healing, and I am not trying to rush anything. I know you have your own feelings to sort through too. I just wanted to be honest with you.
+Lately, with us talking more, I realized that some feelings I thought were gone were actually still there. They had just been quiet. They have been growing a little more every day, even when I tried to ignore them. I’m still healing, and I am not asking for anything or trying to rush you. I know you have your own feelings to sort through too. I just wanted to be honest with you because you deserve honesty.
 
-I do not know what the new year has planned for us, but a part of me hopes it includes you in a bigger way. Even if it does not, I would love to keep making little memories together. Another movie night, late-night conversations, or any small moment we end up sharing.
+I don’t know what the new year has planned for us, but a part of me hopes it includes you in a bigger way. Even if it doesn’t, I would love to keep making little memories together. Another movie night, late-night conversations, or any small moment that we end up sharing.
 
-Thank you for being someone who matters to me.
+Thank you for being someone who matters to me.  
 Merry Christmas and Happy New Year.
 
 — [your name]
+  </div>
 </div>
 
 <script>
-  // Snow generation
-  const snowContainer = document.getElementById('snow');
-  for (let i = 0; i < 60; i++) {
-    const s = document.createElement('span');
-    const size = Math.random() * 5 + 2;
-    s.style.width = size + 'px';
-    s.style.height = size + 'px';
-    s.style.left = Math.random() * 100 + 'vw';
-    s.style.animationDuration = Math.random() * 3 + 2 + 's';
-    s.style.animationDelay = Math.random() * 5 + 's';
-    snowContainer.appendChild(s);
-  }
-
-  const codeInput = document.getElementById('codeInput');
-  const snowglobe = document.getElementById('snowglobe');
+  const globeContainer = document.getElementById('globeContainer');
+  const globe = document.getElementById('globe');
+  const scene = document.getElementById('scene');
   const paper = document.getElementById('paper');
 
-  codeInput.addEventListener('input', () => {
-    if (codeInput.value.toLowerCase() === 'hamster') {
-      snowglobe.classList.remove('hidden');
-      snowglobe.style.transform = 'scale(1.2)';
+  // Add snowflakes
+  for(let i=0; i<40; i++){
+    let flake = document.createElement('div');
+    flake.classList.add('snowflake');
+    flake.style.left = Math.random()*100 + '%';
+    flake.style.animationDuration = (Math.random()*3 + 2) + 's';
+    flake.style.animationDelay = (Math.random()*5) + 's';
+    flake.style.width = flake.style.height = (Math.random()*4 + 2) + 'px';
+    globe.appendChild(flake);
+  }
 
-      setTimeout(() => {
-        snowglobe.style.animation = 'shake 0.5s ease';
-      }, 500);
+  // Click to shake globe and reveal paper
+  globeContainer.addEventListener('click', () => {
+    globeContainer.classList.add('shake');
+    scene.style.transform = 'scale(1.2) rotateY(10deg) rotateX(5deg)';
 
-      setTimeout(() => {
-        snowglobe.style.transform = 'scale(2)';
-      }, 1000);
+    setTimeout(() => {
+      globeContainer.style.opacity = 0;
+      paper.classList.add('reveal');
 
-      setTimeout(() => {
-        snowglobe.style.opacity = '0';
-        paper.style.opacity = '1';
-        paper.style.transform = 'scale(1) rotate(0)';
-      }, 1800);
-    }
+      // Optional confetti
+      for(let i=0; i<50; i++){
+        let confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+        confetti.style.left = Math.random()*100 + '%';
+        confetti.style.background = ['#f94144','#f3722c','#f9844a','#f9c74f','#90be6d','#43aa8b','#577590'][Math.floor(Math.random()*7)];
+        confetti.style.animationDuration = (Math.random()*3+2)+'s';
+        document.body.appendChild(confetti);
+        setTimeout(()=> confetti.remove(), 4000);
+      }
+    }, 800);
   });
 </script>
 
