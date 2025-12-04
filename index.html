@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Christmas Letter</title>
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(#b21818, #801212);
+      font-family: 'Georgia', serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .center {
+      position: relative;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .snowglobe {
+      width: 280px;
+      height: 280px;
+      background: url('snowglobe.png') center/cover no-repeat;
+      animation: float 3s ease-in-out infinite;
+      transition: transform 1s ease;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
+    }
+
+    .hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .paper {
+      width: 90%;
+      max-width: 600px;
+      padding: 30px;
+      background: #fffdf6;
+      border: 2px solid gold;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+      position: absolute;
+      opacity: 0;
+      transform: scale(0.5) rotate(-2deg);
+      transition: opacity 1.2s ease, transform 1.2s ease;
+      white-space: pre-wrap;
+      font-size: 1.05rem;
+      line-height: 1.5rem;
+    }
+
+    .snow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .snow span {
+      position: absolute;
+      top: -10px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.8;
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      to { transform: translateY(110vh); }
+    }
+
+    #codeInput {
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="snow" id="snow"></div>
+
+<div class="center" id="center">
+  <div class="snowglobe" id="snowglobe"></div>
+  <input id="codeInput" placeholder="Enter the code..." />
+</div>
+
+<div class="paper" id="paper">
+Hey [her name],
+
+I hope the holidays have been treating you well. I wanted to give you something a little more personal than a gift, so I decided to write this for you.
+
+We have known each other since February, and you have become such a steady part of my life that it feels like you have been around much longer. We have both gone through a lot this year, with my relationships, your crush, and everything in between. Through all of that, you have stayed someone I feel grateful to have beside me.
+
+One of my favorite memories is still that movie night when we watched The Nun. I am not sure if it was the movie or the fact that I was next to you, but my heart was racing the entire time. It was simple, but it felt right, and the feeling stayed with me.
+
+There is something about the way you laugh and the way you talk about the things that matter to you. You make everything feel lighter without trying. Even on my rough days, hearing from you makes everything calmer. I met a lot of people this year, but you are the one who keeps coming to mind. No one makes me feel as understood as you do.
+
+I wish you could see yourself the way I see you. You are beautiful, with or without makeup. You are sweet, kind, adorable, and one of the most caring people I know.
+
+Lately, as we talked more, I realized that some feelings I thought were gone were actually still there. They had just been quiet. They have been growing a little more every day. I am still healing, and I am not trying to rush anything. I know you have your own feelings to sort through too. I just wanted to be honest with you.
+
+I do not know what the new year has planned for us, but a part of me hopes it includes you in a bigger way. Even if it does not, I would love to keep making little memories together. Another movie night, late-night conversations, or any small moment we end up sharing.
+
+Thank you for being someone who matters to me.
+Merry Christmas and Happy New Year.
+
+— [your name]
+</div>
+
+<script>
+  // Snow generation
+  const snowContainer = document.getElementById('snow');
+  for (let i = 0; i < 60; i++) {
+    const s = document.createElement('span');
+    const size = Math.random() * 5 + 2;
+    s.style.width = size + 'px';
+    s.style.height = size + 'px';
+    s.style.left = Math.random() * 100 + 'vw';
+    s.style.animationDuration = Math.random() * 3 + 2 + 's';
+    s.style.animationDelay = Math.random() * 5 + 's';
+    snowContainer.appendChild(s);
+  }
+
+  const codeInput = document.getElementById('codeInput');
+  const snowglobe = document.getElementById('snowglobe');
+  const paper = document.getElementById('paper');
+
+  codeInput.addEventListener('input', () => {
+    if (codeInput.value.toLowerCase() === 'hamster'.toLowerCase()) {
+      // Show snowglobe if hidden
+      snowglobe.classList.remove('hidden');
+
+      // Camera zoom effect
+      snowglobe.style.transform = 'scale(1.2)';
+
+      setTimeout(() => {
+        // Shake animation
+        snowglobe.style.animation = 'shake 0.5s ease';
+      }, 500);
+
+      setTimeout(() => {
+        // Zoom in further to "inside"
+        snowglobe.style.transform = 'scale(2)';
+      }, 1000);
+
+      setTimeout(() => {
+        // Begin transition to paper
+        snowglobe.style.opacity = '0';
+        paper.style.opacity = '1';
+        paper.style.transform = 'scale(1) rotate(0)';
+      }, 1800);
+    }
+  });
+</script>
+
+</body>
+</html>
