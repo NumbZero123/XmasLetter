@@ -19,8 +19,7 @@
     .center {
       position: relative;
       text-align: center;
-      cursor: pointer;
-      z-index: 1;
+      z-index: 2;
     }
 
     .snowglobe {
@@ -30,7 +29,8 @@
       animation: float 3s ease-in-out infinite;
       transition: transform 1s ease, opacity 1s ease;
       position: relative;
-      z-index: 0;
+      z-index: 1;
+      pointer-events: none;
     }
 
     @keyframes float {
@@ -103,6 +103,7 @@
       font-size: 1rem;
       position: relative;
       z-index: 3;
+      pointer-events: auto;
     }
   </style>
 </head>
@@ -158,7 +159,6 @@ Merry Christmas and Happy New Year.
 
   codeInput.addEventListener('input', () => {
     if (codeInput.value.toLowerCase() === 'hamster') {
-      // Show snowglobe
       snowglobe.classList.remove('hidden');
       snowglobe.style.transform = 'scale(1.2)';
 
